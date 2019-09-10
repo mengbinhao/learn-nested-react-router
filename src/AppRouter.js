@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 
 const Index = () => {
@@ -77,38 +77,42 @@ const Audio2 = () => {
   return <h4>Audio2</h4>
 }
 
-class AppRouter extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {}
-  }
-  render() {
-    return (
-      <Router>
-        <div className="mainDiv">
-          <div className="leftNav">
-            <h6>一级导航</h6>
-            <ul>
-              <li>
-                <Link to="/">blog</Link>
-              </li>
-              <li>
-                <Link to="/video/">video</Link>
-              </li>
-              <li>
-                <Link to="/audio/">audio</Link>
-              </li>
-            </ul>
-          </div>
-          <div className="rightMain">
-            <Route path="/" exact component={Index}></Route>
-            <Route path="/video/" component={Video}></Route>
-            <Route path="/audio/" component={Audio}></Route>
-          </div>
+const AppRouter = () => {
+  let routeConfig = [
+    { path: '/', title: 'blog', exact: true, component: Index },
+    { path: '/video/', title: 'video', exact: false, component: Video },
+    { path: '/audio/', title: 'audio', exact: false, component: Audio }
+  ]
+  return (
+    <Router>
+      <div className="mainDiv">
+        <div className="leftNav">
+          <h6>一级导航</h6>
+          <ul>
+            {routeConfig.map((item, index) => {
+              return (
+                <li key={index}>
+                  <Link to={item.path}>{item.title}</Link>
+                </li>
+              )
+            })}
+          </ul>
         </div>
-      </Router>
-    )
-  }
+        <div className="rightMain">
+          {routeConfig.map((item, index) => {
+            return (
+              <Route
+                key={index}
+                path={item.path}
+                exact={item.exact}
+                component={item.component}
+              ></Route>
+            )
+          })}
+        </div>
+      </div>
+    </Router>
+  )
 }
 
 export default AppRouter
